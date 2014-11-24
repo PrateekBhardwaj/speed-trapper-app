@@ -1,0 +1,51 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+
+<html>
+<script src="Scripts/jquery-1.6.4.min.js"></script>
+<script src="Scripts/jquery.signalR-2.1.0.min.js"></script>
+<script src="signalr/hubs"></script>
+
+<script type="text/javascript">
+    $(function () {
+
+        $.connection.hub.start().done(function () {
+            $('#sendmessage').click(function () {
+                // Call the Send method on the hub. 
+                chat.server.send($('#carname').val(), $('#speed').val());
+
+            });
+        });
+    });
+</script>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        My name is <b class="carname">@ViewBag.Car </b>
+        <br />
+
+        @if (ViewBag.Speed < 100)
+        {
+               
+            <div class="speed" style="font-size: x-large; color: green">
+                @ViewBag.Speed
+            </div> <div>Km</div>
+            
+            <div>(Current Speed)</div>
+       
+        }
+        else
+        { 
+            <div style="font-size: x-large; color: Red">You are busted </div>
+            <div>(Your speed is </div> <div class="speed">@ViewBag.Speed)</div>
+        }
+    </div>
+</body>
+</html>
