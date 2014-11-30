@@ -4,33 +4,47 @@
 
 <!DOCTYPE html>
 
-
 <html>
-<script src="Scripts/jquery-1.6.4.min.js"></script>
-<script src="Scripts/jquery.signalR-2.1.0.min.js"></script>
-<script src="signalr/hubs"></script>
-
-<script type="text/javascript">
-    $(function () {
-
-        $.connection.hub.start().done(function () {
-            $('#sendmessage').click(function () {
-                // Call the Send method on the hub. 
-                chat.server.send($('#carname').val(), $('#speed').val());
-
-            });
-        });
-    });
-</script>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
-</head>
-<body>
-    <div>
-        My name is <b class="carname">@ViewBag.Car </b>
-        <br />
+    <script src="~/Scripts/jquery-1.6.4.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.1.2.js"></script>
+    <script src="/signalr/hubs"></script>
 
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var name = $('#carname').data('myvalue');
+            //  alert(name);
+            var speed = $('#speed1').data('myspeed');
+            //  alert(speed);
+            var chat = $.connection.myhub1;
+            chat.client.clientmethod = function (name, speed) {
+               // alert(name + speed);
+                var encodedName = $('<div />').text(name).html();
+                var encodedSpeed = $('<div />').text(speed).html();
+                // Add the message to the page.
+                $('.speed').val(encodedSpeed);
+                $('#discussion').append('<li><strong>' + encodedName
+                    + '</strong>:&nbsp;&nbsp;' + encodedSpeed + '</li>');
+            }
+
+            $.connection.hub.start().done(function () {
+                //  alert(carname + speed);
+                chat.server.hello(name, speed);
+            });
+        });
+    </script>
+
+    <input type="button" id="sendmessage" value="Apply" />
+    <div>
+        My name is <b id="carname" data-myvalue="@ViewBag.Car"></b>@ViewBag.Car
+        <br />
+        <b id="speed1" data-myspeed="@ViewBag.Speed"></b>
         @if (ViewBag.Speed < 100)
         {
                
@@ -47,5 +61,11 @@
             <div>(Your speed is </div> <div class="speed">@ViewBag.Speed)</div>
         }
     </div>
+    <div class="container">
+        <input type="text" id="message" />
+        <input type="hidden" id="displayname" />
+        <ul id="discussion"></ul>
+    </div>
 </body>
+
 </html>
