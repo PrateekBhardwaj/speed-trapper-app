@@ -1,0 +1,71 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/Scripts/jquery-1.6.4.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.1.2.js"></script>
+    <script src="/signalr/hubs"></script>
+
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var name = $('#carname').data('myvalue');
+            //  alert(name);
+            var speed = $('#speed1').data('myspeed');
+            //  alert(speed);
+            var chat = $.connection.myhub;
+            chat.client.clientmethod = function (name, speed) {
+                 //alert(name + speed);
+                var encodedName = $('<div />').text(name).html();
+                var encodedSpeed = $('<div />').text(speed).html();
+                // Add the message to the page.
+                $('.speed').val(encodedSpeed);
+                $('#discussion').append('<li><strong>' + encodedName
+                    + '</strong>:&nbsp;&nbsp;' + encodedSpeed + '</li>');
+            }
+
+            $.connection.hub.start().done(function () {
+                //  alert(carname + speed);
+                chat.server.send(name, speed).done(function (oPostData) {});
+            });
+        });
+    </script>
+
+    <input type="button" id="sendmessage" value="Apply" />
+    <div>
+        My name is <b id="carname" data-myvalue="@ViewBag.Car"></b>@ViewBag.Car
+        <br />
+        <b id="speed1" data-myspeed="@ViewBag.Speed"></b>
+        @if (ViewBag.Speed < 100)
+        {
+               
+            <div class="speed" style="font-size: x-large; color: green">
+                @ViewBag.Speed
+            </div> <div>Km</div>
+            
+            <div>(Current Speed)</div>
+       
+        }
+        else
+        { 
+            <div style="font-size: x-large; color: Red">You are busted </div>
+            <div>(Your speed is </div> <div class="speed">@ViewBag.Speed)</div>
+        }
+    </div>
+    <div class="container">
+        <input type="text" id="message" />
+        <input type="hidden" id="displayname" />
+        <ul id="discussion"></ul>
+    </div>
+</body>
+
+</html>

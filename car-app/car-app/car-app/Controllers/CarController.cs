@@ -1,17 +1,15 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Assignment_Exzeo.Controllers
+namespace car_app.Controllers
 {
-
-    public class CarsController : Controller
+    public class CarController : Controller
     {
         //
-        // GET: /Cars/
-
+        // GET: /Car/
         public ActionResult Index()
         {
             Random r1 = new Random();
@@ -23,6 +21,5 @@ namespace Assignment_Exzeo.Controllers
             ViewBag.Tag = "current speed";
             return View();
         }
-
-    }
+	}
 }
